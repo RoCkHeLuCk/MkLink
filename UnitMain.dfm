@@ -122,8 +122,10 @@ object FrmMKLink: TFrmMKLink
     Top = 69
     Width = 145
     Height = 21
+    Style = csDropDownList
+    ItemIndex = 1
     TabOrder = 4
-    Text = 'Diretorio'
+    Text = 'Directory'
     Items.Strings = (
       'File'
       'Directory'

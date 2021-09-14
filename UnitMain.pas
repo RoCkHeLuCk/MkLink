@@ -68,8 +68,6 @@ begin
 end;
 
 procedure TFrmMKLink.BtnCriarClick ( Sender: TObject );
-var
-   c : integer;
 begin
   if not DirectoryExists ( EdtOrigem.Text ) then
      MkDir(EdtOrigem.Text);
@@ -95,12 +93,7 @@ begin
       Exit;
   end;
 
-  c := 10;
-  while DirectoryExists( EdtLink.Text ) and (c > 0) do
-  begin
-    sleep(100);
-    Inc(c);
-  end;
+  sleep(1000);
 
   if CreateSymbolicLinkW ( PWideChar( EdtLink.Text ),
     PWideChar( EdtOrigem.Text ), DWORD( CmbTipo.ItemIndex ) ) then
