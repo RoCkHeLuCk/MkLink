@@ -1,10 +1,11 @@
 object FrmMKLink: TFrmMKLink
   Left = 0
   Top = 0
-  BorderStyle = bsDialog
+  BorderIcons = [biSystemMenu]
+  BorderStyle = bsSizeToolWin
   Caption = 'MKLink V1.0'
-  ClientHeight = 112
-  ClientWidth = 519
+  ClientHeight = 189
+  ClientWidth = 504
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,7 +14,11 @@ object FrmMKLink: TFrmMKLink
   Font.Style = []
   OldCreateOrder = False
   Position = poScreenCenter
+  OnClose = FormClose
   OnCreate = FormCreate
+  DesignSize = (
+    504
+    189)
   PixelsPerInch = 96
   TextHeight = 13
   object LblOrigem: TLabel
@@ -90,29 +95,35 @@ object FrmMKLink: TFrmMKLink
     Top = 13
     Width = 374
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 0
+    OnChange = EdtOrigemChange
   end
   object BtnOrigem: TButton
-    Left = 455
+    Left = 457
     Top = 11
     Width = 42
     Height = 25
+    Anchors = [akTop, akRight]
     Caption = '...'
     TabOrder = 1
     OnClick = BtnOrigemClick
   end
   object EdtLink: TEdit
     Left = 75
-    Top = 42
+    Top = 41
     Width = 374
     Height = 21
+    Anchors = [akLeft, akTop, akRight]
     TabOrder = 2
+    OnChange = EdtOrigemChange
   end
   object BtnLink: TButton
-    Left = 455
+    Left = 457
     Top = 40
     Width = 42
     Height = 25
+    Anchors = [akTop, akRight]
     Caption = '...'
     TabOrder = 3
     OnClick = BtnLinkClick
@@ -131,21 +142,52 @@ object FrmMKLink: TFrmMKLink
       'Directory'
       'Developer')
   end
-  object BtnCriar: TButton
-    Left = 324
+  object BtnCreate: TButton
+    Left = 374
     Top = 69
     Width = 75
     Height = 25
     Caption = 'Create'
+    Enabled = False
     TabOrder = 5
-    OnClick = BtnCriarClick
+    OnClick = BtnCreateClick
+  end
+  object BtnAdd: TButton
+    Left = 258
+    Top = 69
+    Width = 75
+    Height = 25
+    Caption = 'Add Script'
+    Enabled = False
+    TabOrder = 6
+    OnClick = BtnAddClick
+  end
+  object GpbScript: TGroupBox
+    Left = 8
+    Top = 100
+    Width = 491
+    Height = 81
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Caption = 'Script'
+    TabOrder = 7
+    object MmoScript: TMemo
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 481
+      Height = 58
+      Align = alClient
+      BorderStyle = bsNone
+      ScrollBars = ssBoth
+      TabOrder = 0
+    end
   end
   object OpdMKLink: TFileOpenDialog
     FavoriteLinks = <>
     FileTypes = <>
     Options = [fdoPickFolders, fdoForceFileSystem, fdoNoValidate, fdoCreatePrompt, fdoNoTestFileCreate, fdoForceShowHidden]
     Title = 'Selecione Pastas ou Arquivos'
-    Left = 424
+    Left = 464
     Top = 68
   end
 end

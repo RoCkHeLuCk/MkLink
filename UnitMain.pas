@@ -17,16 +17,23 @@ type
     BtnLink: TButton;
     CmbTipo: TComboBox;
     Label1: TLabel;
-    BtnCriar: TButton;
+    BtnCreate: TButton;
     OpdMKLink: TFileOpenDialog;
     SpeedButton1: TSpeedButton;
-    procedure BtnCriarClick ( Sender: TObject );
+    BtnAdd: TButton;
+    GpbScript: TGroupBox;
+    MmoScript: TMemo;
+    procedure BtnCreateClick ( Sender: TObject );
     procedure FormCreate ( Sender: TObject );
     procedure BtnOrigemClick ( Sender: TObject );
     procedure BtnLinkClick ( Sender: TObject );
     procedure SpeedButton1Click(Sender: TObject);
+    procedure BtnAddClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure EdtOrigemChange(Sender: TObject);
   private
     { Private declarations }
+    fDir: String;
   public
     { Public declarations }
   end;
@@ -67,7 +74,18 @@ begin
   Result := SHFileOperation ( Arquivos );
 end;
 
-procedure TFrmMKLink.BtnCriarClick ( Sender: TObject );
+procedure TFrmMKLink.BtnAddClick(Sender: TObject);
+begin
+  if MessageDlg ( 'Remove Directory Exist?',
+    mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes then
+  begin
+    MmoScript.Lines.Add('rmdir /s /q "'+EdtLink.Text+'"');
+  end;
+  MmoScript.Lines.Add('mklink /D "'+EdtLink.Text+'" "'+EdtOrigem.Text+'"');
+  MmoScript.Lines.SaveToFile(fDir+'\script.cmd');
+end;
+
+procedure TFrmMKLink.BtnCreateClick ( Sender: TObject );
 begin
   if not DirectoryExists ( EdtOrigem.Text ) then
      MkDir(EdtOrigem.Text);
@@ -110,9 +128,13 @@ begin
   if OpdMKLink.Execute ( Handle ) then
   begin
     EdtLink.Text := OpdMKLink.FileName;
-    if copy ( EdtLink.Text, length( EdtLink.Text ), 1 ) <> '\' then
-      EdtLink.Text := EdtLink.Text + '\';
-    EdtLink.Text := EdtLink.Text + ExtractFileName ( EdtOrigem.Text );
+    if (EdtOrigem.Text <> '') and (MessageDlg ( 'Insert origin folder name?',
+      mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+    begin
+      if copy( EdtLink.Text, length( EdtLink.Text ), 1 ) <> '\' then
+        EdtLink.Text := EdtLink.Text + '\';
+      EdtLink.Text := EdtLink.Text + ExtractFileName ( EdtOrigem.Text );
+    end;
   end;
 end;
 
@@ -125,9 +147,29 @@ begin
   end;
 end;
 
+procedure TFrmMKLink.EdtOrigemChange(Sender: TObject);
+begin
+  if (EdtOrigem.Text <> '') and (EdtLink.Text <> '') then
+  begin
+      BtnAdd.Enabled := True;
+      BtnCreate.Enabled := True;
+  end else begin
+      BtnAdd.Enabled := False;
+      BtnCreate.Enabled := False;
+  end;
+end;
+
+procedure TFrmMKLink.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+    MmoScript.Lines.SaveToFile(fDir+'\script.cmd');
+end;
+
 procedure TFrmMKLink.FormCreate ( Sender: TObject );
 begin
   EdtOrigem.Text := string( ParamStr( 1 ) );
+  fDir := ExtractFilePath(ParamStr(0));
+  if FileExists(fDir+'\script.cmd') then
+    MmoScript.Lines.LoadFromFile(fDir+'\script.cmd');
 end;
 
 procedure TFrmMKLink.SpeedButton1Click(Sender: TObject);
