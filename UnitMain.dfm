@@ -4,21 +4,23 @@ object FrmMKLink: TFrmMKLink
   BorderIcons = [biSystemMenu]
   BorderStyle = bsSizeToolWin
   Caption = 'MKLink V1.0'
-  ClientHeight = 189
+  ClientHeight = 231
   ClientWidth = 504
   Color = clBtnFace
+  Constraints.MinHeight = 270
+  Constraints.MinWidth = 520
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
-  Position = poScreenCenter
+  Position = poDesigned
   OnClose = FormClose
   OnCreate = FormCreate
   DesignSize = (
     504
-    189)
+    231)
   PixelsPerInch = 96
   TextHeight = 13
   object LblOrigem: TLabel
@@ -90,6 +92,14 @@ object FrmMKLink: TFrmMKLink
       FFFF000000FF000000FF000000FF000000FF000000FF000000FF}
     OnClick = SpeedButton1Click
   end
+  object lblName: TLabel
+    Left = 253
+    Top = 72
+    Width = 69
+    Height = 13
+    Alignment = taRightJustify
+    Caption = 'Copy name in:'
+  end
   object EdtOrigem: TEdit
     Left = 75
     Top = 13
@@ -143,8 +153,8 @@ object FrmMKLink: TFrmMKLink
       'Developer')
   end
   object BtnCreate: TButton
-    Left = 374
-    Top = 69
+    Left = 259
+    Top = 98
     Width = 75
     Height = 25
     Caption = 'Create'
@@ -153,8 +163,8 @@ object FrmMKLink: TFrmMKLink
     OnClick = BtnCreateClick
   end
   object BtnAdd: TButton
-    Left = 258
-    Top = 69
+    Left = 35
+    Top = 98
     Width = 75
     Height = 25
     Caption = 'Add Script'
@@ -164,9 +174,9 @@ object FrmMKLink: TFrmMKLink
   end
   object GpbScript: TGroupBox
     Left = 8
-    Top = 100
+    Top = 129
     Width = 491
-    Height = 81
+    Height = 94
     Anchors = [akLeft, akTop, akRight, akBottom]
     Caption = 'Script'
     TabOrder = 7
@@ -175,19 +185,60 @@ object FrmMKLink: TFrmMKLink
       Left = 5
       Top = 18
       Width = 481
-      Height = 58
+      Height = 71
       Align = alClient
       BorderStyle = bsNone
       ScrollBars = ssBoth
       TabOrder = 0
+      ExplicitHeight = 73
     end
+  end
+  object ckbAuto: TCheckBox
+    Left = 340
+    Top = 102
+    Width = 156
+    Height = 17
+    Hint = 'Automatically move files and remove destination folder'
+    Caption = 'Auto move and delete'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 8
+  end
+  object ckbDelete: TCheckBox
+    Left = 116
+    Top = 102
+    Width = 137
+    Height = 17
+    Hint = 'Add comand line  delete destination folde'
+    Caption = 'Delete destination'
+    ParentShowHint = False
+    ShowHint = True
+    TabOrder = 9
+  end
+  object btnOrigin: TButton
+    Left = 328
+    Top = 67
+    Width = 75
+    Height = 25
+    Caption = 'Origin'
+    TabOrder = 10
+    OnClick = btnOriginClick
+  end
+  object btnDestine: TButton
+    Left = 409
+    Top = 68
+    Width = 75
+    Height = 25
+    Caption = 'Link'
+    TabOrder = 11
+    OnClick = btnDestineClick
   end
   object OpdMKLink: TFileOpenDialog
     FavoriteLinks = <>
     FileTypes = <>
     Options = [fdoPickFolders, fdoForceFileSystem, fdoNoValidate, fdoCreatePrompt, fdoNoTestFileCreate, fdoForceShowHidden]
     Title = 'Selecione Pastas ou Arquivos'
-    Left = 464
-    Top = 68
+    Left = 272
+    Top = 188
   end
 end
