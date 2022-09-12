@@ -190,7 +190,6 @@ object FrmMKLink: TFrmMKLink
       BorderStyle = bsNone
       ScrollBars = ssBoth
       TabOrder = 0
-      ExplicitHeight = 73
     end
   end
   object ckbAuto: TCheckBox
@@ -199,7 +198,7 @@ object FrmMKLink: TFrmMKLink
     Width = 156
     Height = 17
     Hint = 'Automatically move files and remove destination folder'
-    Caption = 'Auto move and delete'
+    Caption = 'Silence move and delete'
     ParentShowHint = False
     ShowHint = True
     TabOrder = 8

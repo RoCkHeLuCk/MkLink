@@ -87,51 +87,77 @@ end;
 
 procedure TFrmMKLink.BtnAddClick(Sender: TObject);
 begin
-  if (ckbDelete.Checked)
-  OR (MessageDlg ( 'Add comand line: Remove Directory Exist?',
-    mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+  if CmbTipo.ItemIndex <> 0 then
   begin
-    MmoScript.Lines.Add('rmdir /s /q "'+EdtLink.Text+'"');
+    if (ckbDelete.Checked)
+    OR (MessageDlg ( 'Add comand line: Remove Directory Exist?',
+      mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+    begin
+      MmoScript.Lines.Add('rmdir /s /q "'+EdtLink.Text+'"');
+    end;
+    MmoScript.Lines.Add('mklink /D "'+EdtLink.Text+'" "'+EdtOrigem.Text+'"');
+  end else begin
+    if (ckbDelete.Checked)
+    OR (MessageDlg ( 'Add comand line: Remove File Exist?',
+      mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+    begin
+      MmoScript.Lines.Add('del /F /Q "'+EdtLink.Text+'"');
+    end;
+    MmoScript.Lines.Add('mklink "'+EdtLink.Text+'" "'+EdtOrigem.Text+'"');
   end;
-  MmoScript.Lines.Add('mklink /D "'+EdtLink.Text+'" "'+EdtOrigem.Text+'"');
   MmoScript.Lines.SaveToFile(fDir+'\script.cmd');
 end;
 
 procedure TFrmMKLink.BtnCreateClick ( Sender: TObject );
 begin
-  if not DirectoryExists ( EdtOrigem.Text ) then
-     MkDir(EdtOrigem.Text);
 
-  if DirectoryExists ( EdtLink.Text ) then
+  if CmbTipo.ItemIndex <> 0 then
   begin
-    if (ckbAuto.Checked) OR (MessageDlg ( 'Destination directory exists'
-    + #13#10 + 'Do you want to move all files to source?',
-      mtConfirmation, [ mbYesToAll, mbNo ], 0 ) = mrYesToAll) then
-    begin
-      FileControl ( EdtLink.Text+'\*.*', EdtOrigem.Text+'\', FO_MOVE,
-        FOF_SILENT or FOF_NOCONFIRMATION or FOF_NOCONFIRMMKDIR
-        or FOF_SIMPLEPROGRESS );
-    end;
+    if not DirectoryExists ( EdtOrigem.Text ) then
+       MkDir(EdtOrigem.Text);
 
-    if (ckbAuto.Checked) OR (MessageDlg ( 'Destination directory exists'
-    + #13#10 + 'Do you want to delete everything?',
-      mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+    if DirectoryExists ( EdtLink.Text ) then
     begin
-      FileControl ( EdtLink.Text, '', FO_DELETE, FOF_SILENT or
-        FOF_NOCONFIRMATION or FOF_NOCONFIRMMKDIR or FOF_SIMPLEPROGRESS);
-    end
-    else
-      Exit;
+      if (ckbAuto.Checked) OR (MessageDlg ( 'Destination directory exists'
+      + #13#10 + 'Do you want to move all files to source?',
+        mtConfirmation, [ mbYesToAll, mbNo ], 0 ) = mrYesToAll) then
+      begin
+        FileControl ( EdtLink.Text+'\*.*', EdtOrigem.Text+'\', FO_MOVE,
+          FOF_NOCONFIRMATION or FOF_NOCONFIRMMKDIR or FOF_SIMPLEPROGRESS );
+      end;
+
+      if (ckbAuto.Checked) OR (MessageDlg ( 'Destination directory exists'
+      + #13#10 + 'Do you want to delete everything?',
+        mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+      begin
+        FileControl ( EdtLink.Text, '', FO_DELETE,
+          FOF_NOCONFIRMATION or FOF_NOCONFIRMMKDIR or FOF_SIMPLEPROGRESS);
+      end
+      else
+        Exit;
+    end;
+  end else begin
+    if FileExists( EdtLink.Text ) then
+    begin
+      if (ckbAuto.Checked) OR (MessageDlg ( 'Destination file exists'
+      + #13#10 + 'Do you want to move file to source?',
+        mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+      begin
+        FileControl ( EdtLink.Text, EdtOrigem.Text, FO_MOVE,
+          FOF_NOCONFIRMATION or FOF_NOCONFIRMMKDIR or FOF_SIMPLEPROGRESS );
+      end else
+        Exit;
+    end;
   end;
 
   sleep(1000);
 
-  if CreateSymbolicLinkW ( PWideChar( EdtLink.Text ),
+  if CreateSymbolicLinkW( PWideChar( EdtLink.Text ),
     PWideChar( EdtOrigem.Text ), DWORD( CmbTipo.ItemIndex ) ) then
   begin
-    showMessage ( 'Create Link :)' );
+    showMessage( 'Create Link :)' );
   end else begin
-    showMessage ( 'Error Create Link :(' );
+    showMessage( 'Error Create Link :(' );
   end;
 end;
 
@@ -164,6 +190,13 @@ begin
   if OpdMKLink.Execute ( Handle ) then
   begin
     EdtOrigem.Text := OpdMKLink.FileName;
+    if (EdtLink.Text <> '') and (MessageDlg ( 'Insert link folder name?',
+      mtConfirmation, [ mbYes, mbNo ], 0 ) = mrYes) then
+    begin
+      if copy( EdtOrigem.Text, length( EdtOrigem.Text ), 1 ) <> '\' then
+        EdtOrigem.Text := EdtOrigem.Text + '\';
+      EdtOrigem.Text := EdtOrigem.Text + ExtractFileName ( EdtLink.Text );
+    end;
   end;
 end;
 
